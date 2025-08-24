@@ -1,15 +1,14 @@
 import { useEffect, useRef } from "react";
 import { glCreateProgram } from "../gl/glCreateProgram";
 import { glCreateBuffer } from "../gl/glCreateBuffer";
+import { useElement } from "../utils/useElement";
 
 export const ShaderCanvas = ({ paused = false }: { paused: boolean }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const initializedRef = useRef(false);
+  const canvas = useElement<HTMLCanvasElement | null>(canvasRef);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || initializedRef.current) return;
-    initializedRef.current = true;
+    if (canvas == null) return;
 
     // キャンバスにサイズを与える（CSSでもOK）
     canvas.style.width = "100%";
@@ -97,7 +96,6 @@ export const ShaderCanvas = ({ paused = false }: { paused: boolean }) => {
       cancelAnimationFrame(id);
       ro.disconnect();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
-      initializedRef.current = false;
       canvas.removeEventListener("webglcontextlost", (e) => {
         console.error("lost");
         e.preventDefault();
@@ -106,7 +104,7 @@ export const ShaderCanvas = ({ paused = false }: { paused: boolean }) => {
         console.warn("restored");
       });
     };
-  }, [paused]);
+  }, [paused, canvas]);
 
   // 親要素側に高さが無いと 0px になるので注意
   return (
