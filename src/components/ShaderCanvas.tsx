@@ -39,23 +39,9 @@ export const ShaderCanvas = ({ paused = false }: { paused: boolean }) => {
 
     gl.vertexAttribPointer(0, attStride, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(0);
-    // gl.bindVertexArray(vbo);
 
     const locR = gl.getUniformLocation(prg, "r");
     const locT = gl.getUniformLocation(prg, "t");
-
-    // // ===== フルスクリーントライアングル =====
-    // const vb = gl.createBuffer()!;
-    // gl.bindBuffer(gl.ARRAY_BUFFER, vb);
-    // gl.bufferData(
-    //   gl.ARRAY_BUFFER,
-    //   new Float32Array([-1, -1, 3, -1, -1, 3]),
-    //   gl.STATIC_DRAW
-    // );
-    // const va = gl.createVertexArray()!;
-    // gl.bindVertexArray(va);
-    // gl.enableVertexAttribArray(0);
-    // gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
 
     // ===== リサイズ =====
     const resize = () => {
@@ -77,7 +63,6 @@ export const ShaderCanvas = ({ paused = false }: { paused: boolean }) => {
       id = requestAnimationFrame(tick);
       if (paused) return;
       gl.useProgram(prg); // 念のため
-      // gl.bindVertexArray(va);
       gl.uniform2f(locR, canvas.width, canvas.height);
       gl.uniform1f(locT, (now - start) / 1000);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
