@@ -1,4 +1,5 @@
 import Editor from "./components/Editor/Editor";
+import { ErrorPanel } from "./components/ErrorPanel/ErrorPanel";
 import ShaderCanvas from "./components/ShaderCanvas/ShaderCanvas";
 import { useState } from "react";
 
@@ -24,6 +25,7 @@ function App() {
     <>
       <Editor value={code} onChange={setCode} onSave={handleSave} />
       <ShaderCanvas paused={false} fsSource={fsSource} />
+      <ErrorPanel />
     </>
   );
 }

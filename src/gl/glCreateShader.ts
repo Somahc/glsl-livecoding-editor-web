@@ -10,17 +10,25 @@ export function glCreateShader(
   gl.compileShader(shader);
 
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.error(type);
-    console.error(gl.getShaderInfoLog(shader) ?? undefined);
-    const log = gl.getShaderInfoLog(shader) ?? undefined;
-    const numbered = source
-      .split("\n")
-      .map((l, i) => `${String(i + 1).padStart(3, " ")}| ${l}`)
-      .join("\n");
-    gl.deleteShader(shader);
-    throw new Error(
-      `[${type.toUpperCase()} COMPILE]\n${log}\n---SOURCE---\n${numbered}`
-    );
+    const rawLog = gl.getShaderInfoLog(shader) ?? "";
+
+    // 特殊文字を削除
+    const cleanedLog = (() => {
+      let end = rawLog.length;
+      while (end > 0) {
+        const codePoint = rawLog.charCodeAt(end - 1);
+        const isAsciiControl = codePoint === 0x7f || codePoint <= 0x1f; // DEL or C0 controls
+        if (isAsciiControl) {
+          end -= 1;
+          continue;
+        }
+        break;
+      }
+      return rawLog.slice(0, end).trim();
+    })();
+
+    console.error(cleanedLog || undefined);
+    throw new Error(cleanedLog || undefined);
   }
 
   return shader;
