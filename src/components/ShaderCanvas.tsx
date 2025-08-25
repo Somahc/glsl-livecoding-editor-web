@@ -99,7 +99,7 @@ export const ShaderCanvas = ({
     const tick = (now: number) => {
       id = requestAnimationFrame(tick);
       if (paused) return;
-      gl.useProgram(prg); // 念のため
+      gl.useProgram(progRef.current); // 念のため
       gl.uniform2f(locRRef.current, canvas.width, canvas.height);
       gl.uniform1f(locTRef.current, (now - start) / 1000);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -152,76 +152,6 @@ export const ShaderCanvas = ({
       console.error(e);
     }
   }, [fsSource]);
-
-  // useEffect(() => {
-  //   if (!fsSource) return;
-
-  //   const gl = glRef.current;
-  //   if (!gl) return;
-
-  //   try {
-  //     //   const fs = gl.createShader(gl.FRAGMENT_SHADER)!;
-  //     //   gl.shaderSource(fs, fsSource);
-  //     //   gl.compileShader(fs);
-  //     //   if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) {
-  //     //     console.error("[FS ERROR]", gl.getShaderInfoLog(fs) || "");
-  //     //     gl.deleteShader(fs);
-  //     //     return; // 失敗したら旧プログラムを使い続ける
-  //     //   }
-  //     //   const p = gl.createProgram()!;
-  //     //     gl.attachShader(p, vs);
-  //     //   gl.attachShader(p, fs);
-  //     //   gl.linkProgram(p);
-  //     //   gl.deleteShader(fs);
-  //     //   if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
-  //     //     console.error("[LINK ERROR]", gl.getProgramInfoLog(p) || "");
-  //     //     gl.deleteProgram(p);
-  //     //     return;
-  //     //   }
-
-  //     const vertexShader = gl.createShader(gl.VERTEX_SHADER)!;
-
-  //     gl.shaderSource(vertexShader, vs);
-  //     gl.compileShader(vertexShader);
-
-  //     if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-  //       throw new Error(gl.getShaderInfoLog(vertexShader) ?? undefined);
-  //       return;
-  //     }
-
-  //     const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)!;
-  //     gl.shaderSource(fragmentShader, fsSource);
-  //     gl.compileShader(fragmentShader);
-
-  //     if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-  //       throw new Error(gl.getShaderInfoLog(fragmentShader) ?? undefined);
-  //       return;
-  //     }
-
-  //     const p = gl.createProgram()!;
-  //     gl.attachShader(p, vertexShader);
-  //     gl.attachShader(p, fragmentShader);
-  //     gl.linkProgram(p);
-
-  //     if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
-  //       throw new Error(gl.getProgramInfoLog(p) ?? undefined);
-  //       return;
-  //     }
-
-  //     // スワップ
-  //     if (progRef.current) gl.deleteProgram(progRef.current);
-  //     progRef.current = p;
-  //     gl.useProgram(p);
-
-  //     locRRef.current = gl.getUniformLocation(p, "r");
-  //     locTRef.current = gl.getUniformLocation(p, "t");
-
-  //     gl.deleteShader(vertexShader);
-  //     gl.deleteShader(fragmentShader);
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // }, [fsSource]);
 
   // 親要素側に高さが無いと 0px になるので注意
   return (
