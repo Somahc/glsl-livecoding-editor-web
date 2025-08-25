@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
-import { glCreateProgram } from "../gl/glCreateProgram";
-import { glCreateBuffer } from "../gl/glCreateBuffer";
-import { useElement } from "../utils/useElement";
-import { glCreateShader } from "../gl/glCreateShader";
-import { DEFAULT_FS_CODE } from "../App";
+import { glCreateProgram } from "../../gl/glCreateProgram";
+import { glCreateBuffer } from "../../gl/glCreateBuffer";
+import { useElement } from "../../utils/useElement";
+import { glCreateShader } from "../../gl/glCreateShader";
+import { DEFAULT_FS_CODE } from "../../App";
+import style from "./index.module.css";
 
 const vs = `#version 300 es
       layout(location=0) in vec2 pos;       // ← 固定ロケーション、板ポリなのでZは0で固定するから二次元
@@ -29,10 +30,6 @@ export const ShaderCanvas = ({
 
   useEffect(() => {
     if (canvas == null) return;
-
-    // キャンバスにサイズを与える（CSSでもOK）
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
 
     const gl = canvas.getContext("webgl2", { alpha: false });
     if (!gl) return;
@@ -154,12 +151,7 @@ export const ShaderCanvas = ({
   }, [fsSource]);
 
   // 親要素側に高さが無いと 0px になるので注意
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{ display: "block", width: "100vw", height: "100vh" }}
-    />
-  );
+  return <canvas ref={canvasRef} className={style.canvas} />;
 };
 
 export default ShaderCanvas;

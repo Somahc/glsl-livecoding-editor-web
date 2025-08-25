@@ -1,5 +1,5 @@
-import Editor from "./components/Editor";
-import ShaderCanvas from "./components/ShaderCanvas";
+import Editor from "./components/Editor/Editor";
+import ShaderCanvas from "./components/ShaderCanvas/ShaderCanvas";
 import { useState } from "react";
 
 export const DEFAULT_FS_CODE = `#version 300 es 

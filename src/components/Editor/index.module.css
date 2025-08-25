@@ -1,0 +1,13 @@
+.cm-editor {
+  background: red;
+}
+
+/* 非空行だけ背景白 */
+.cm-line:not(:empty) {
+  background-color: white;
+}
+
+/* 行間の隙間を少し調整（任意） */
+.cm-line {
+  padding: 2px 4px;
+}
