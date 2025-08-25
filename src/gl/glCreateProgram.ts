@@ -1,41 +1,22 @@
 export function glCreateProgram(
   gl: WebGLRenderingContext,
-  vert: string,
-  frag: string
+  vert: WebGLShader,
+  frag: WebGLShader
 ): WebGLProgram {
-  // vertex shader
-  const vertexShader = gl.createShader(gl.VERTEX_SHADER)!;
-
-  gl.shaderSource(vertexShader, vert);
-  gl.compileShader(vertexShader);
-
-  if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-    throw new Error(gl.getShaderInfoLog(vertexShader) ?? undefined);
-  }
-
-  // fragment shader
-  const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)!;
-
-  gl.shaderSource(fragmentShader, frag);
-  gl.compileShader(fragmentShader);
-
-  if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-    throw new Error(gl.getShaderInfoLog(fragmentShader) ?? undefined);
-  }
-
-  // program
   const program = gl.createProgram()!;
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
+  gl.attachShader(program, vert);
+  gl.attachShader(program, frag);
   gl.linkProgram(program);
 
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    throw new Error(gl.getProgramInfoLog(program) ?? undefined);
+    const msg = gl.getProgramInfoLog(program) ?? undefined;
+    gl.deleteProgram(program);
+    throw new Error(msg);
   }
 
   // いらないので削除
-  gl.deleteShader(vertexShader);
-  gl.deleteShader(fragmentShader);
+  gl.deleteShader(vert);
+  gl.deleteShader(frag);
 
   gl.useProgram(program);
   return program;

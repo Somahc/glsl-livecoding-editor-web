@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { glCreateProgram } from "../gl/glCreateProgram";
 import { glCreateBuffer } from "../gl/glCreateBuffer";
 import { useElement } from "../utils/useElement";
+import { glCreateShader } from "../gl/glCreateShader";
+import { DEFAULT_FS_CODE } from "../App";
 
 const vs = `#version 300 es
       layout(location=0) in vec2 pos;       // ← 固定ロケーション、板ポリなのでZは0で固定するから二次元
@@ -18,6 +20,8 @@ export const ShaderCanvas = ({
   const canvas = useElement<HTMLCanvasElement | null>(canvasRef);
 
   const glRef = useRef<WebGL2RenderingContext | null>(null);
+  const glVertexShaderRef = useRef<WebGLShader | null>(null);
+  const glFragmentShaderRef = useRef<WebGLShader | null>(null);
   const progRef = useRef<WebGLProgram | null>(null);
 
   const locRRef = useRef<WebGLUniformLocation | null>(null);
@@ -34,16 +38,31 @@ export const ShaderCanvas = ({
     if (!gl) return;
     glRef.current = gl;
 
-    // const vs = `#version 300 es
-    //   layout(location=0) in vec2 pos;       // ← 固定ロケーション、板ポリなのでZは0で固定するから二次元
-    //   void main(){ gl_Position = vec4(pos, 0.0, 1.0); }`;
+    if (!glVertexShaderRef.current)
+      glVertexShaderRef.current = glCreateShader(gl, "vertex", vs);
 
-    const fsDummy = `#version 300 es 
-      precision highp float; out vec4 o;
-      uniform vec2 r; uniform float t;
-      void main(){ vec2 uv=(gl_FragCoord.xy-0.5*r)/r.y; float v=.02/abs(length(uv)-.5+.1*sin(t)); o=vec4(vec3(v),1.); }`;
+    glFragmentShaderRef.current = glCreateShader(
+      gl,
+      "fragment",
+      DEFAULT_FS_CODE
+    );
 
-    const prg = glCreateProgram(gl, vs, fsDummy);
+    if (
+      glVertexShaderRef.current == null ||
+      glFragmentShaderRef.current == null
+    ) {
+      console.error(
+        "glVertexShaderRef.current or glFragmentShaderRef.current is null"
+      );
+      return;
+    }
+
+    const prg = glCreateProgram(
+      gl,
+      glVertexShaderRef.current,
+      glFragmentShaderRef.current
+    );
+
     progRef.current = prg;
 
     const attStride = 2;
@@ -80,7 +99,7 @@ export const ShaderCanvas = ({
     const tick = (now: number) => {
       id = requestAnimationFrame(tick);
       if (paused) return;
-      gl.useProgram(prg); // 念のため
+      gl.useProgram(progRef.current); // 念のため
       gl.uniform2f(locRRef.current, canvas.width, canvas.height);
       gl.uniform1f(locTRef.current, (now - start) / 1000);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -110,69 +129,25 @@ export const ShaderCanvas = ({
   }, [paused, canvas]);
 
   useEffect(() => {
-    if (!fsSource) return;
-
+    if (fsSource == null) return;
     const gl = glRef.current;
-    if (!gl) return;
+    const vsObj = glVertexShaderRef.current;
+    if (!gl || !vsObj) return;
 
     try {
-      //   const fs = gl.createShader(gl.FRAGMENT_SHADER)!;
-      //   gl.shaderSource(fs, fsSource);
-      //   gl.compileShader(fs);
-      //   if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) {
-      //     console.error("[FS ERROR]", gl.getShaderInfoLog(fs) || "");
-      //     gl.deleteShader(fs);
-      //     return; // 失敗したら旧プログラムを使い続ける
-      //   }
-      //   const p = gl.createProgram()!;
-      //     gl.attachShader(p, vs);
-      //   gl.attachShader(p, fs);
-      //   gl.linkProgram(p);
-      //   gl.deleteShader(fs);
-      //   if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
-      //     console.error("[LINK ERROR]", gl.getProgramInfoLog(p) || "");
-      //     gl.deleteProgram(p);
-      //     return;
-      //   }
-      const vertexShader = gl.createShader(gl.VERTEX_SHADER)!;
+      const fsObj = glCreateShader(gl, "fragment", fsSource);
+      if (fsObj == null) return;
 
-      gl.shaderSource(vertexShader, vs);
-      gl.compileShader(vertexShader);
-
-      if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-        throw new Error(gl.getShaderInfoLog(vertexShader) ?? undefined);
-        return;
-      }
-
-      const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)!;
-      gl.shaderSource(fragmentShader, fsSource);
-      gl.compileShader(fragmentShader);
-
-      if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-        throw new Error(gl.getShaderInfoLog(fragmentShader) ?? undefined);
-        return;
-      }
-
-      const p = gl.createProgram()!;
-      gl.attachShader(p, vertexShader);
-      gl.attachShader(p, fragmentShader);
-      gl.linkProgram(p);
-
-      if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
-        throw new Error(gl.getProgramInfoLog(p) ?? undefined);
-        return;
-      }
+      const newProg = glCreateProgram(gl, vsObj, fsObj);
+      gl.useProgram(newProg);
+      const newLocR = gl.getUniformLocation(newProg, "r");
+      const newLocT = gl.getUniformLocation(newProg, "t");
 
       // スワップ
       if (progRef.current) gl.deleteProgram(progRef.current);
-      progRef.current = p;
-      gl.useProgram(p);
-
-      locRRef.current = gl.getUniformLocation(p, "r");
-      locTRef.current = gl.getUniformLocation(p, "t");
-
-      gl.deleteShader(vertexShader);
-      gl.deleteShader(fragmentShader);
+      progRef.current = newProg;
+      locRRef.current = newLocR;
+      locTRef.current = newLocT;
     } catch (e) {
       console.error(e);
     }
