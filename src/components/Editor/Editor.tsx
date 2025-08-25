@@ -43,10 +43,10 @@ const Editor = ({
         value={value}
         onChange={onChange}
         extensions={[
-          glsl(),
           saveKeymap,
-          myTheme,
+          glsl(),
           textBackgroundExtension,
+          myTheme,
           syntaxHighlighting(myHighlightStyle),
         ]}
       />
@@ -56,10 +56,8 @@ const Editor = ({
 
 const myTheme = EditorView.theme({
   "&": {
-    color: "white",
-    fontSize: "14px",
     "&.cm-editor": {
-      background: "rgb(255, 255, 255, 0)",
+      background: "rgba(255, 0, 0, 0)",
     },
     "&.cm-focused": {
       outline: "none",
@@ -69,12 +67,26 @@ const myTheme = EditorView.theme({
     backgroundColor: "transparent",
     border: "none",
   },
+  ".cm-scroller": {
+    color: "white",
+    fontSize: "18px",
+    fontFamily: "'Space Mono', monospace",
+    fontWeight: "400",
+    fontStyle: "normal",
+  },
+  ".cm-line": {
+    paddingLeft: "0px",
+  },
+  "&.cm-focused .cm-cursor": {
+    borderLeftColor: "white",
+    borderLeftWidth: "3px",
+  },
 });
 
 const myHighlightStyle = HighlightStyle.define([
   { tag: tags.comment, color: "green" },
   { tag: tags.keyword, color: "orange" },
-  { tag: tags.typeName, color: "blue" },
+  { tag: tags.typeName, color: "rgb(82, 91, 219)" },
   { tag: tags.number, color: "red" },
 ]);
 

@@ -45,18 +45,10 @@ export const textBackgroundExtension: Extension = [
   TextBackground,
   EditorView.baseTheme({
     ".cm-textBg": {
-      backgroundColor: "rgba(0,0,0,0.9)",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
       boxDecorationBreak: "clone",
       WebkitBoxDecorationBreak: "clone",
-
-      padding: "2px 0",
-      margin: "-2px 0",
       borderRadius: "0",
-    },
-
-    ".cm-line": {
-      paddingTop: "0px",
-      paddingBottom: "0px",
     },
   }),
 ];
