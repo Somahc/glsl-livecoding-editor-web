@@ -1,9 +1,11 @@
 import Editor from "./components/Editor/Editor";
-import { ErrorPanel } from "./components/ErrorPanel/ErrorPanel";
 import ShaderCanvas from "./components/ShaderCanvas/ShaderCanvas";
 import { useState } from "react";
+import UpperTimeStatsPanel from "./components/UpperTimeStatsPanel/UpperTimeStatsPanel";
+import style from "./index.module.css";
+import BottomStatsSection from "./components/BottomStatsSection/BottomStatsSection";
 
-export const DEFAULT_FS_CODE = `#version 300 es 
+export const DEFAULT_FS_CODE = `#version 300 es
 precision highp float;
 out vec4 o;
 uniform vec2 resolution;
@@ -25,9 +27,18 @@ function App() {
   };
   return (
     <>
-      <Editor value={code} onChange={setCode} onSave={handleSave} />
+      <div className={style.container}>
+        <section>
+          <UpperTimeStatsPanel />
+        </section>
+        <section className={style.editor}>
+          <Editor value={code} onChange={setCode} onSave={handleSave} />
+        </section>
+        <section>
+          <BottomStatsSection />
+        </section>
+      </div>
       <ShaderCanvas paused={false} fsSource={fsSource} />
-      <ErrorPanel />
     </>
   );
 }

@@ -7,6 +7,7 @@ import { DEFAULT_FS_CODE } from "../../App";
 import style from "./index.module.css";
 import { compileErrorMessageAtom } from "../../stores/atom/compileErrorMessage";
 import { useSetAtom } from "jotai";
+import { useCurrentStatsInfo } from "../../stores/useCurrentStatsInfo";
 
 const vs = `#version 300 es
       layout(location=0) in vec2 pos;       // ← 固定ロケーション、板ポリなのでZは0で固定するから二次元
@@ -29,6 +30,7 @@ export const ShaderCanvas = ({
 
   const locResolutionRef = useRef<WebGLUniformLocation | null>(null);
   const locTimeRef = useRef<WebGLUniformLocation | null>(null);
+  const { setCurrentElapsedTime } = useCurrentStatsInfo();
 
   const setCompileErrorMessage = useSetAtom(compileErrorMessageAtom);
 
@@ -102,7 +104,9 @@ export const ShaderCanvas = ({
       if (paused) return;
       gl.useProgram(progRef.current); // 念のため
       gl.uniform2f(locResolutionRef.current, canvas.width, canvas.height);
-      gl.uniform1f(locTimeRef.current, (now - start) / 1000);
+      const elapsed = (now - start) / 1000;
+      setCurrentElapsedTime(elapsed);
+      gl.uniform1f(locTimeRef.current, elapsed);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
     id = requestAnimationFrame(tick);
@@ -127,7 +131,7 @@ export const ShaderCanvas = ({
         console.warn("restored");
       });
     };
-  }, [paused, canvas]);
+  }, [paused, canvas, setCurrentElapsedTime]);
 
   useEffect(() => {
     if (fsSource == null) return;
