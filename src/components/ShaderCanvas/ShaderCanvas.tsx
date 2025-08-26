@@ -27,8 +27,8 @@ export const ShaderCanvas = ({
   const glFragmentShaderRef = useRef<WebGLShader | null>(null);
   const progRef = useRef<WebGLProgram | null>(null);
 
-  const locRRef = useRef<WebGLUniformLocation | null>(null);
-  const locTRef = useRef<WebGLUniformLocation | null>(null);
+  const locResolutionRef = useRef<WebGLUniformLocation | null>(null);
+  const locTimeRef = useRef<WebGLUniformLocation | null>(null);
 
   const setCompileErrorMessage = useSetAtom(compileErrorMessageAtom);
 
@@ -78,8 +78,8 @@ export const ShaderCanvas = ({
     gl.vertexAttribPointer(0, attStride, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(0);
 
-    locRRef.current = gl.getUniformLocation(prg, "r");
-    locTRef.current = gl.getUniformLocation(prg, "t");
+    locResolutionRef.current = gl.getUniformLocation(prg, "resolution");
+    locTimeRef.current = gl.getUniformLocation(prg, "time");
 
     // ===== リサイズ =====
     const resize = () => {
@@ -101,8 +101,8 @@ export const ShaderCanvas = ({
       id = requestAnimationFrame(tick);
       if (paused) return;
       gl.useProgram(progRef.current); // 念のため
-      gl.uniform2f(locRRef.current, canvas.width, canvas.height);
-      gl.uniform1f(locTRef.current, (now - start) / 1000);
+      gl.uniform2f(locResolutionRef.current, canvas.width, canvas.height);
+      gl.uniform1f(locTimeRef.current, (now - start) / 1000);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
     id = requestAnimationFrame(tick);
@@ -141,14 +141,14 @@ export const ShaderCanvas = ({
 
       const newProg = glCreateProgram(gl, vsObj, fsObj);
       gl.useProgram(newProg);
-      const newLocR = gl.getUniformLocation(newProg, "r");
-      const newLocT = gl.getUniformLocation(newProg, "t");
+      const newLocResolution = gl.getUniformLocation(newProg, "resolution");
+      const newLocTime = gl.getUniformLocation(newProg, "time");
 
       // スワップ
       if (progRef.current) gl.deleteProgram(progRef.current);
       progRef.current = newProg;
-      locRRef.current = newLocR;
-      locTRef.current = newLocT;
+      locResolutionRef.current = newLocResolution;
+      locTimeRef.current = newLocTime;
       setCompileErrorMessage("");
     } catch (e) {
       if (e instanceof Error) {
@@ -161,7 +161,6 @@ export const ShaderCanvas = ({
     }
   }, [fsSource, setCompileErrorMessage]);
 
-  // 親要素側に高さが無いと 0px になるので注意
   return <canvas ref={canvasRef} className={style.canvas} />;
 };
 

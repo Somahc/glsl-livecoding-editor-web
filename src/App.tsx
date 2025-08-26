@@ -4,13 +4,15 @@ import ShaderCanvas from "./components/ShaderCanvas/ShaderCanvas";
 import { useState } from "react";
 
 export const DEFAULT_FS_CODE = `#version 300 es 
-precision highp float; out vec4 o;
-uniform vec2 r; uniform float t;
+precision highp float;
+out vec4 o;
+uniform vec2 resolution;
+uniform float time;
 
 void main()
 {
-  vec2 uv=(gl_FragCoord.xy-0.5*r)/r.y;
-  float v=.02/abs(length(uv)-.5+.1*sin(t));
+  vec2 uv=(gl_FragCoord.xy-0.5*resolution)/resolution.y;
+  float v=.02/abs(length(uv)-.5+.1*sin(time));
   o=vec4(vec3(v),1.);
 }`;
 
