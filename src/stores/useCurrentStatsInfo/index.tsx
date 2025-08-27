@@ -1,8 +1,10 @@
 import { useAtomValue, useSetAtom } from "jotai";
-import { currentElapsedTimeAtom } from "../atom/currentStatsInfo";
+import { currentElapsedTimeAtom, shaderBPMAtom } from "../atom/currentStatsInfo";
 
 export const useCurrentStatsInfo = () => {
   const currentElapsedTime = useAtomValue(currentElapsedTimeAtom);
   const setCurrentElapsedTime = useSetAtom(currentElapsedTimeAtom);
-  return { currentElapsedTime, setCurrentElapsedTime };
+  const shaderBPM = useAtomValue(shaderBPMAtom);
+  const setShaderBPM = useSetAtom(shaderBPMAtom);
+  return { currentElapsedTime, setCurrentElapsedTime, shaderBPM, setShaderBPM };
 };

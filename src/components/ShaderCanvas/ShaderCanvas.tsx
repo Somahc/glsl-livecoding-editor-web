@@ -30,9 +30,16 @@ export const ShaderCanvas = ({
 
   const locResolutionRef = useRef<WebGLUniformLocation | null>(null);
   const locTimeRef = useRef<WebGLUniformLocation | null>(null);
-  const { setCurrentElapsedTime } = useCurrentStatsInfo();
+  const locBPMRef = useRef<WebGLUniformLocation | null>(null);
+
+  const { setCurrentElapsedTime, shaderBPM } = useCurrentStatsInfo();
+
+  const shaderBPMRef = useRef<number>(shaderBPM);
 
   const setCompileErrorMessage = useSetAtom(compileErrorMessageAtom);
+
+
+  useEffect(() => { shaderBPMRef.current = shaderBPM; }, [shaderBPM]);
 
   useEffect(() => {
     if (canvas == null) return;
@@ -82,6 +89,7 @@ export const ShaderCanvas = ({
 
     locResolutionRef.current = gl.getUniformLocation(prg, "resolution");
     locTimeRef.current = gl.getUniformLocation(prg, "time");
+    locBPMRef.current = gl.getUniformLocation(prg, "bpm");
 
     // ===== リサイズ =====
     const resize = () => {
@@ -107,6 +115,7 @@ export const ShaderCanvas = ({
       const elapsed = (now - start) / 1000;
       setCurrentElapsedTime(elapsed);
       gl.uniform1f(locTimeRef.current, elapsed);
+      gl.uniform1f(locBPMRef.current, shaderBPMRef.current);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
     id = requestAnimationFrame(tick);
@@ -147,12 +156,13 @@ export const ShaderCanvas = ({
       gl.useProgram(newProg);
       const newLocResolution = gl.getUniformLocation(newProg, "resolution");
       const newLocTime = gl.getUniformLocation(newProg, "time");
-
+      const newLocBPM = gl.getUniformLocation(newProg, "bpm");
       // スワップ
       if (progRef.current) gl.deleteProgram(progRef.current);
       progRef.current = newProg;
       locResolutionRef.current = newLocResolution;
       locTimeRef.current = newLocTime;
+      locBPMRef.current = newLocBPM;
       setCompileErrorMessage("");
     } catch (e) {
       if (e instanceof Error) {

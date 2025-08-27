@@ -10,6 +10,7 @@ precision highp float;
 out vec4 o;
 uniform vec2 resolution;
 uniform float time;
+uniform float bpm;
 
 void main()
 {
