@@ -40,11 +40,11 @@ export const ShaderCanvas = ({
 
   const setCompileErrorMessage = useSetAtom(compileErrorMessageAtom);
 
-
+  // シェーダーパラメータ更新
   useEffect(() => { shaderBPMRef.current = shaderBPM; }, [shaderBPM]);
-
   useEffect(() => { isResetShaderTimeRef.current = isResetShaderTime; }, [isResetShaderTime]);
 
+  // シェーダー初期化
   useEffect(() => {
     if (canvas == null) return;
 
@@ -150,8 +150,9 @@ export const ShaderCanvas = ({
         console.warn("restored");
       });
     };
-  }, [paused, canvas, setCurrentElapsedTime]);
+  }, [paused, canvas, setCurrentElapsedTime, setIsResetShaderTime]);
 
+  // シェーダーコンパイルエラー表示、ホットスワップ
   useEffect(() => {
     if (fsSource == null) return;
     const gl = glRef.current;
