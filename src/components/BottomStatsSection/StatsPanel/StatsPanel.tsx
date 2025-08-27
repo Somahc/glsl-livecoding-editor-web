@@ -2,7 +2,7 @@ import bottomCommonStyle from "../index.module.css";
 import { useCurrentStatsInfo } from "../../../stores/useCurrentStatsInfo";
 
 export default function StatsPanel() {
-  const { shaderBPM, setShaderBPM, setCurrentElapsedTime } = useCurrentStatsInfo();
+  const { shaderBPM, setShaderBPM, setIsResetShaderTime } = useCurrentStatsInfo();
 
   const handleBPMChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShaderBPM(Number(e.target.value));
@@ -13,7 +13,7 @@ export default function StatsPanel() {
   };
 
   const handleResetShaderTime = () => {
-    setCurrentElapsedTime(0);
+    setIsResetShaderTime(true);
   };
 
   return (

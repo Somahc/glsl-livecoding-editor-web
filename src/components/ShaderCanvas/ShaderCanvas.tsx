@@ -32,7 +32,9 @@ export const ShaderCanvas = ({
   const locTimeRef = useRef<WebGLUniformLocation | null>(null);
   const locBPMRef = useRef<WebGLUniformLocation | null>(null);
 
-  const { setCurrentElapsedTime, shaderBPM } = useCurrentStatsInfo();
+  const isResetShaderTimeRef = useRef<boolean>(false);
+
+  const { setCurrentElapsedTime, shaderBPM, setIsResetShaderTime, isResetShaderTime } = useCurrentStatsInfo();
 
   const shaderBPMRef = useRef<number>(shaderBPM);
 
@@ -40,6 +42,8 @@ export const ShaderCanvas = ({
 
 
   useEffect(() => { shaderBPMRef.current = shaderBPM; }, [shaderBPM]);
+
+  useEffect(() => { isResetShaderTimeRef.current = isResetShaderTime; }, [isResetShaderTime]);
 
   useEffect(() => {
     if (canvas == null) return;
@@ -106,10 +110,16 @@ export const ShaderCanvas = ({
 
     // ===== ループ =====
     let id = 0;
-    const start = performance.now();
+    let start = performance.now();
     const tick = (now: number) => {
       id = requestAnimationFrame(tick);
       if (paused) return;
+      // シェーダーの経過時間をリセットがリクエストされたら、経過時間をリセット
+      if (isResetShaderTimeRef.current) {
+        start = performance.now();
+        isResetShaderTimeRef.current = false;
+        setIsResetShaderTime(false);
+      }
       gl.useProgram(progRef.current); // 念のため
       gl.uniform2f(locResolutionRef.current, canvas.width, canvas.height);
       const elapsed = (now - start) / 1000;
