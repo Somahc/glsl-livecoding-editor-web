@@ -11,12 +11,13 @@ export default function ErrorPanel() {
 
   return (
     <div className={bottomCommonStyle.BottomPanelcontainer}>
+      <div className={bottomCommonStyle.title}>Shader Compile Status</div>
       {parts.length > 0 ? (
         parts.map((p, i) => (
           <div className={style.errorMessage} key={i}>{`ERROR: ${p}`}</div>
         ))
       ) : (
-        <div>No errors found</div>
+        <div className={style.noErrorMessage}>Compilation successful</div>
       )}
     </div>
   );

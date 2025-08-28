@@ -1,6 +1,6 @@
 .container {
   display: grid;
-  grid-template-rows: 90px 1fr 120px;
+  grid-template-rows: 90px 1fr 140px;
   gap: 10px;
   height: 100vh;
   width: 95%;

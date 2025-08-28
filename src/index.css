@@ -2,3 +2,10 @@ html,
 body {
   box-sizing: border-box;
 }
+
+:root {
+  --color-error: rgb(209, 31, 0);
+  --color-success: rgb(27, 73, 0);
+  --color-main: rgb(190, 114, 0);
+  --color-text-bg: rgba(0, 0, 0, 0.5);
+}

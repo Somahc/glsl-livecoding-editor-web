@@ -1,7 +1,36 @@
 .errorMessage {
   font-family: "Sometype Mono", monospace;
-  color: red;
+  color: white;
+  padding: 0 5px;
+  text-shadow: 0 0 2.5px var(--color-error), 0 0 5px var(--color-error),
+    0 0 10px var(--color-error);
+
+  width: fit-content;
   font-size: 14px;
   font-weight: 400;
   line-height: 1.5;
+}
+
+.noErrorMessage {
+  font-family: "Sometype Mono", monospace;
+  color: #fff;
+  text-shadow: 0 0 2.5px var(--color-success), 0 0 5px var(--color-success),
+    0 0 10px var(--color-success);
+  width: fit-content;
+  padding: 0 5px;
+}
+
+@keyframes flash {
+  0%,
+  100% {
+    /* 明るく光るよう影を重ねる */
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff,
+      0 0 40px rgb(27, 73, 0), 0 0 70px rgb(27, 73, 0), 0 0 80px rgb(27, 73, 0),
+      0 0 100px rgb(27, 73, 0), 0 0 150px rgb(27, 73, 0);
+  }
+  50% {
+    /* 淡く光るよう影を重ねる */
+    text-shadow: 0 0 10px #fff, 0 0 20px #fcfcfc, 0 0 30px #fcfcfc,
+      0 0 40px rgb(27, 73, 0);
+  }
 }

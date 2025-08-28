@@ -6,6 +6,7 @@ import { EditorView, keymap } from "@codemirror/view";
 import "./index.module.css";
 import { textBackgroundExtension } from "./textBackgroundExtension";
 import { syntaxHighlighting, HighlightStyle } from "@codemirror/language";
+import style from "./index.module.css";
 
 const Editor = ({
   value,
@@ -39,6 +40,7 @@ const Editor = ({
   );
   return (
     <>
+      {/* <div className={style.title}>Code Editor</div> */}
       <ReactCodeMirror
         value={value}
         onChange={onChange}

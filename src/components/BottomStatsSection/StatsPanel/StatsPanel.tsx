@@ -1,4 +1,5 @@
 import { useCurrentStatsInfo } from "../../../stores/useCurrentStatsInfo";
+import bottomCommonStyle from "../index.module.css";
 import style from "./index.module.css";
 
 export default function StatsPanel() {
@@ -21,46 +22,47 @@ export default function StatsPanel() {
   };
 
   return (
-    // <div className={bottomCommonStyle.BottomPanelcontainer}>
-    <div className={style.statsContainer}>
-      <div className={style.paramContainer}>
-        <label className={style.paramContainer_label} htmlFor="bpm">
-          BPM
-        </label>
-        <div className={style.paramContainer_input}>
-          <input
-            id="bpm"
-            type="number"
-            value={shaderBPM}
-            onChange={handleBPMChange}
-          />
+    <div className={bottomCommonStyle.BottomPanelcontainer}>
+      <div className={bottomCommonStyle.title}>General Shader Status</div>
+      <div className={style.statsContainer}>
+        <div className={style.paramContainer}>
+          <label className={style.paramContainer_label} htmlFor="bpm">
+            BPM
+          </label>
+          <div className={style.paramContainer_input}>
+            <input
+              id="bpm"
+              type="number"
+              value={shaderBPM}
+              onChange={handleBPMChange}
+            />
+          </div>
         </div>
-      </div>
 
-      <div className={style.paramContainer}>
-        <div className={style.paramContainer_label}>Reset time</div>
-        <div>
-          <button onClick={handleResetShaderTime}>Reset</button>
+        <div className={style.paramContainer}>
+          <div className={style.paramContainer_label}>Reset time</div>
+          <div>
+            <button onClick={handleResetShaderTime}>Reset</button>
+          </div>
         </div>
-      </div>
 
-      <div className={style.paramContainer}>
-        <div className={style.paramContainer_label}>BEAT</div>
-        <div className={style.beatMeter}>
-          <div
-            className={style.beatMeterBar}
-            style={{ transform: `translateX(-${beatMeter()}%)` }}
-          ></div>
+        <div className={style.paramContainer}>
+          <div className={style.paramContainer_label}>BEAT</div>
+          <div className={style.beatMeter}>
+            <div
+              className={style.beatMeterBar}
+              style={{ transform: `translateX(-${beatMeter()}%)` }}
+            ></div>
+          </div>
         </div>
-      </div>
 
-      <div className={style.paramContainer}>
-        <div className={style.paramContainer_label}>Reset time</div>
-        <div className={style.paramContainer_button}>
-          <button onClick={handleResetShaderTime}>Reset</button>
+        <div className={style.paramContainer}>
+          <div className={style.paramContainer_label}>Reset time</div>
+          <div className={style.paramContainer_button}>
+            <button onClick={handleResetShaderTime}>Reset</button>
+          </div>
         </div>
       </div>
     </div>
-    // </div>
   );
 }

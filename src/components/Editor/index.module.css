@@ -1,13 +1,11 @@
-.cm-editor {
-  background: red;
-}
-
-/* 非空行だけ背景白 */
-.cm-line:not(:empty) {
-  background-color: white;
-}
-
-/* 行間の隙間を少し調整（任意） */
-.cm-line {
-  padding: 2px 4px;
+.title {
+  font-family: "Sometype Mono", monospace;
+  color: #fff;
+  background-color: var(--color-main);
+  box-shadow: 0 0 2.5px var(--color-main), 0 0 5px var(--color-main),
+    0 0 10px var(--color-main);
+  width: fit-content;
+  padding: 0 5px;
+  margin: 5px;
+  margin-bottom: 5px;
 }
