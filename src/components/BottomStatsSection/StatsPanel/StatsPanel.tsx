@@ -1,17 +1,29 @@
 import { useCurrentStatsInfo } from "../../../stores/useCurrentStatsInfo";
 import bottomCommonStyle from "../index.module.css";
 import style from "./index.module.css";
+import { useCallback } from "react";
 
 export default function StatsPanel() {
   const { shaderBPM, setShaderBPM, setIsResetShaderTime, currentElapsedTime } =
     useCurrentStatsInfo();
 
-  const handleBPMChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setShaderBPM(Number(e.target.value));
-  };
+  const handleBPMChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setShaderBPM(Number(e.target.value));
+    },
+    [setShaderBPM]
+  );
 
   const handleResetShaderTime = () => {
     setIsResetShaderTime(true);
+  };
+
+  const handleDoubleBPM = () => {
+    setShaderBPM(shaderBPM * 2);
+  };
+
+  const handleHalfBPM = () => {
+    setShaderBPM(shaderBPM / 2);
   };
 
   const beatMeter = () => {
@@ -32,10 +44,18 @@ export default function StatsPanel() {
           <div className={style.paramContainer_input}>
             <input
               id="bpm"
-              type="number"
+              type="text"
               value={shaderBPM}
               onChange={handleBPMChange}
             />
+          </div>
+        </div>
+
+        <div className={style.paramContainer}>
+          <div className={style.paramContainer_label}>Adj. BPM</div>
+          <div className={style.paramContainer_doubleButtons}>
+            <button onClick={handleDoubleBPM}>x2.</button>
+            <button onClick={handleHalfBPM}>x.5</button>
           </div>
         </div>
 
@@ -53,13 +73,6 @@ export default function StatsPanel() {
               className={style.beatMeterBar}
               style={{ transform: `translateX(-${beatMeter()}%)` }}
             ></div>
-          </div>
-        </div>
-
-        <div className={style.paramContainer}>
-          <div className={style.paramContainer_label}>Reset time</div>
-          <div className={style.paramContainer_button}>
-            <button onClick={handleResetShaderTime}>Reset</button>
           </div>
         </div>
       </div>
