@@ -7,7 +7,7 @@
 
 .title {
   font-family: "Sometype Mono", monospace;
-  color: #fff;
+  color: #000;
   background-color: var(--color-main);
   box-shadow: 0 0 2.5px var(--color-main), 0 0 5px var(--color-main),
     0 0 10px var(--color-main);
