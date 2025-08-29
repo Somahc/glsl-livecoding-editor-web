@@ -83,6 +83,11 @@ const myTheme = EditorView.theme({
     borderLeftColor: "white",
     borderLeftWidth: "3px",
   },
+  ".cm-activeLineGutter": {
+    backgroundColor: "rgb(255, 166, 33)",
+    boxShadow:
+      "0 0 1.25px rgb(255, 166, 33), 0 0 2.5px rgb(255, 166, 33), 0 0 5px rgb(255, 166, 33)",
+  },
 });
 
 const myHighlightStyle = HighlightStyle.define([
