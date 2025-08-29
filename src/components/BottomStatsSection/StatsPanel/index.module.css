@@ -11,8 +11,9 @@
   position: relative;
   width: 120px;
   height: 80%;
-  border: 2px solid #fff;
-  box-shadow: 0 0 1.25px #fff, 0 0 2.5px #fff, 0 0 5px #fff;
+  border: 2px solid var(--color-main);
+  box-shadow: 0 0 1.25px var(--color-main), 0 0 2.5px var(--color-main),
+    0 0 5px var(--color-main);
   overflow: hidden;
 }
 
@@ -24,8 +25,8 @@
   width: 100%;
   height: 100%;
   background-color: #fff;
-  box-shadow: 0 0 1.25px #fff, 0 0 2.5px #fff, 0 0 5px #fff;
-  transform: translateX(-80%);
+  box-shadow: 0 0 1.25px var(--color-main), 0 0 2.5px var(--color-main),
+    0 0 5px var(--color-main);
 }
 
 .paramContainer {
@@ -51,25 +52,38 @@
   .paramContainer_button {
   }
 
+  .paramContainer_doubleButtons {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 5px;
+    button {
+    }
+  }
+
   input {
     all: unset;
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
+    background-color: transparent;
+    color: #fff;
+    text-shadow: 0 0 1.25px var(--color-main), 0 0 2.5px var(--color-main),
+      0 0 5px var(--color-main);
+    &::selection {
+      background-color: var(--color-main);
+      color: #000;
+    }
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
     }
-
-    background-color: #fff;
-    box-shadow: 0 0 1.25px #fff, 0 0 2.5px #fff, 0 0 5px #fff;
-    color: #000;
   }
   button {
     all: unset;
-    color: #000;
-    background-color: #fff;
-    box-shadow: 0 0 1.25px #fff, 0 0 2.5px #fff, 0 0 5px #fff;
+    color: #fff;
+    background-color: transparent;
+    text-shadow: 0 0 1.25px var(--color-main), 0 0 2.5px var(--color-main),
+      0 0 5px var(--color-main);
   }
 }
